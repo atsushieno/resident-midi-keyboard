@@ -1,6 +1,9 @@
 package org.androidaudioplugin.residentmidikeyboard
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -18,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -31,6 +35,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import dev.atsushieno.ktmidi.AndroidMidiAccess
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -41,17 +48,28 @@ import org.androidaudioplugin.residentmidikeyboard.ui.theme.ComposeAudioControls
 import kotlin.system.exitProcess
 
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+private fun isNotificationPermissionRequired(context: Context) =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+    } else {
+        false
+    }
 
-
+private fun startForeground(context: Context) {
+    with(context) {
         val serviceIntent = Intent(this, MidiKeyboardService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {
             startService(serviceIntent)
         }
+    }
+}
+
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         setContent {
             ComposeAudioControlsTheme {
@@ -71,8 +89,7 @@ class MainActivity : ComponentActivity() {
                 if (System.currentTimeMillis() - lastBackPressed < 2000) {
                     finish()
                     exitProcess(0)
-                }
-                else
+                } else
                     Toast.makeText(this, "Tap once more to quit", Toast.LENGTH_SHORT).show()
                 lastBackPressed = System.currentTimeMillis()
             }
@@ -88,7 +105,7 @@ fun MidiKeyboardManagerMainPreview() {
     }
 }
 
-@OptIn(DelicateCoroutinesApi::class)
+@OptIn(DelicateCoroutinesApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -105,12 +122,38 @@ There are three ways to use this MIDI keyboard:
 - via SurfaceControlViewHost: apps need to connect to it)
 """,
             modifier = Modifier.padding (20.dp))
-        TextButton(onClick = {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-            context.startActivity(intent)
-        }) {
-            Text("Launch overlay permission settings")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isNotificationPermissionRequired(context)) {
+            val permissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+            if (!permissionState.status.isGranted) {
+                Snackbar(contentColor = MaterialTheme.colorScheme.secondary, containerColor = MaterialTheme.colorScheme.secondaryContainer, action = {
+                    TextButton(onClick = {
+                        permissionState.launchPermissionRequest()
+                    }) {
+                        Text("Approve")
+                    }
+                }) {
+                    Text("We need your approval for notification; it contains all the controllers.")
+                }
+            } else
+                startForeground(context)
         }
+        else
+            startForeground(context)
+
+        if (!Settings.canDrawOverlays(context)) {
+            Snackbar(contentColor = MaterialTheme.colorScheme.secondary, containerColor = MaterialTheme.colorScheme.secondaryContainer, action = {
+                TextButton(onClick = {
+                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                    context.startActivity(intent)
+                }) {
+                    Text("Show Settings")
+                }
+            }) {
+                Text("Overlay permission is not approved")
+            }
+        }
+
 
         MidiKeyboardMain(AndroidMidiAccess(context))
 

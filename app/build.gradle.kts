@@ -11,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "org.androidaudioplugin.resident_midi_keyboard"
         minSdk = 23
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -60,6 +61,7 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.ktmidi)
+    implementation(libs.accompanist.permissions)
 
     implementation(project(":compose-audio-controls"))
     implementation(project(":compose-audio-controls-midi"))

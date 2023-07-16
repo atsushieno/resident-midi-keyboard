@@ -1,4 +1,5 @@
 [versions]
+accompanist-permissions = "0.30.1"
 compose-audio-controls = "0.2.0" # ourselves
 agp = "8.0.2"
 compose-markdown = "0.3.4"
@@ -19,6 +20,7 @@ lifecycle-service = "2.6.1"
 material = "1.9.0"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.ref = "compose-markdown" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

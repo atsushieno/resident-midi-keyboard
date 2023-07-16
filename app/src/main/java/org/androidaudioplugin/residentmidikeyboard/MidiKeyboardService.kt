@@ -1,14 +1,15 @@
 package org.androidaudioplugin.residentmidikeyboard
 
-import android.app.Activity
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,11 +17,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -33,26 +31,21 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.SavedStateRegistry
@@ -209,7 +202,11 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
 
         when (intent?.getStringExtra(INTENT_COMMAND_KEY)) {
             ACTION_ALERT_WINDOW_SHOW -> {
-                windowManager.addView(view, wmLayoutParams)
+                if (!Settings.canDrawOverlays(this)) {
+                    Toast.makeText(this, "Overlay permission is not enabled.", Toast.LENGTH_LONG).show()
+                }
+                else
+                    windowManager.addView(view, wmLayoutParams)
             }
 
             ACTION_ALERT_WINDOW_HIDE -> {
@@ -255,7 +252,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 addAction(
                     NotificationCompat.Action.Builder(
                         null, "Show",
-                        PendingIntent.getForegroundService(svc, 1, showAction, 0)
+                        PendingIntent.getForegroundService(svc, 1, showAction, PendingIntent.FLAG_IMMUTABLE)
                     ).build()
                 )
                 val hideAction = Intent(svc, MidiKeyboardService::class.java)
@@ -263,7 +260,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 addAction(
                     NotificationCompat.Action.Builder(
                         null, "Hide",
-                        PendingIntent.getForegroundService(svc, 2, hideAction, 0)
+                        PendingIntent.getForegroundService(svc, 2, hideAction, PendingIntent.FLAG_IMMUTABLE)
                     ).build()
                 )
                 addAction(
@@ -280,7 +277,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 addAction(
                     NotificationCompat.Action.Builder(
                         null, "Stop",
-                        PendingIntent.getForegroundService(svc, 3, stopAction, 0)
+                        PendingIntent.getForegroundService(svc, 3, stopAction, PendingIntent.FLAG_IMMUTABLE)
                     ).build()
                 )
             }
