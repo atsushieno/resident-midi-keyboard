@@ -5,6 +5,10 @@
 
 ResidentMIDIKeyboard for Android is a virtual MIDI keyboard application for Android. It supports MIDI 1.0 and 2.0 (June 2023 Updates, in "almost" standard compliant way).
 
+It supports "Expression Mode": instead of switching keys on the dragged loations, we can send pitchbend messages for horizontal dragging, per-note pitchbend messags for vertical dragging, and polyphonic (key) pressures for pressure changes on the device.
+
+(Note: per-note pitchbend works only on MIDI2 mode, and even on MIDI2 mode there is not really a MIDI device that supports per-note pitchbend, as far as @atsushieno knows as of July 2023.)
+
 There are 3 ways to use the app (actually two for users; one for app developers):
 
 - Using the app: it barely makes sense, but launch the main activity that comes with the keyboard.
@@ -71,8 +75,16 @@ When you check "MIDI2" box, it sends UMP "Stream Configuration Request" message 
 Also note that since we do NOT really pair the output device with its expected input devices for bidirectional messaging, the expected reply (Stream Configuration Notification message) that would be sent by the recipient. If the recipient fails if no input port exists, then the device is not feasible for us (I should probably state, we are not feasible for them).
 
 
+### Hacking ResidentMIDIKeyboard
+
+We submodule [compose-audio-controls](https://github.com/atsushieno/compose-audio-controls/) for convenience, as we most likely depend on unpublished features that are only on `main` branch without release tags. Our project (as in `settings.gradle.kts`) references those modules in the git submodule directly, instead of depending on `mavenLocal()`.
+
+The same could go for [ktmidi](https://github.com/atsushieno/ktmidi/), but it is so far referenced in packages.
+
 ## Licenses
 
 ResidentMidiKeyboard code is released under the MIT license.
 
 It contains an application icon that is a derived work of [Material Design 3 Icons](https://m3.material.io/styles/icons/overview) which are released under the Apache V2 License.
+
+ResidentMidiKeyboard makes use of [jeziellago/compose-markdown](https://github.com/jeziellago/compose-markdown) which is released under the MIT license.
