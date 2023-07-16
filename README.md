@@ -1,6 +1,9 @@
 # ResidentMIDIKeyboard for Android
 
-ResidentMIDIKeyboard for Android is a virtual MIDI keyboard application for Android. It supports MIDI 1.0 and 2.0 June 2023 Updates (in "almost" standard compliant way).
+![Resident MIDI Keyboard (System Alert Window)](docs/images/resident-midi-keyboard-system-alert-window.png)
+![Resident MIDI Keyboard (SurfaceView)](docs/images/resident-midi-keyboard-surface-view.png)
+
+ResidentMIDIKeyboard for Android is a virtual MIDI keyboard application for Android. It supports MIDI 1.0 and 2.0 (June 2023 Updates, in "almost" standard compliant way).
 
 There are 3 ways to use the app (actually two for users; one for app developers):
 
@@ -25,6 +28,7 @@ When the app is launched, it shows a foreground nofitication that contains "Show
 
 Note that you have to explicitly permit UI overlay on Settings in prior.
 
+![Overlay Permission Settings](docs/images/overlay-permission-settings.png)
 
 
 ## MidiKeyboardViewService
@@ -43,11 +47,14 @@ This service receives `Message` i.e. any `Intent` with certain key-value bundles
 | "hostToken" | Binder | the host token: get from `SurfaceView.hostToken` |
 | "displayId" | Int | the display ID: get from `SurfaceView.display.displayId` |
 | "width" | Int | initial width e.g. from `SurfaceView.width` |
-| "height" | Int | initial width e.g. from `SurfaceView.height` |
+| "height" | Int | initial height e.g. from `SurfaceView.height` |
 
 The `MainActivity` comes with an example embedded `SurfaceView` with makes use of `MidiKeyboardSurfaceControlClient` class. (You can reuse it too.)
 
 It is highly encouraged to ensure that you use it as an optional add-in feature; it is always possible to embed the control your own app by just using [ComposeAudioControls](https://github.com/atsushieno/compose-audio-controls/) library (`compose-audio-controls-midi` module).
+
+Note that you will have to ensure that you allocate necessary space for expanded DropDownMenu e.g. by making container scrollable. It is one of the common Jetpack Compose issues (or tricks) regarding how to use it appropriately on a custom View.
+
 
 ## MIDI 2.0 support
 
