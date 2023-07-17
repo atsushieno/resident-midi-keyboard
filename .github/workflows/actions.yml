@@ -37,8 +37,22 @@ jobs:
       with:
         path: /home/runner/.gradle/caches/
         key: ${{ runner.os }}-gradle-caches
+    - name: Bump version
+      uses: chkfung/android-version-actions@v1.2.1
+      with:
+        gradlePath: app/build.gradle.kts
+        versionCode: ${{github.run_number}}
     - name: build
       run: ./gradlew build bundle
+    - name: Sign app APK
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: app/build/outputs/bundle/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE64 }}
+        alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+        keyStorePassword: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
     - name: upload artifact
       if: success()
       uses: actions/upload-artifact@v3
@@ -46,9 +60,9 @@ jobs:
         name: apks and aabs
         path: |
           app/build/outputs/apk/debug/*.apk
-          app/build/outputs/bundle/release/*.aab
+          ${{steps.sign_app.outputs.signedReleaseFile}}
     - name: Create Release
       uses: ncipollo/release-action@v1.12.0
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        artifacts: app/build/outputs/apk/debug/*.apk,app/build/outputs/bundle/release/*.aab
+        artifacts: app/build/outputs/apk/debug/*.apk,${{steps.sign_app.outputs.signedReleaseFile}}
