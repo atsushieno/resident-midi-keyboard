@@ -72,7 +72,7 @@ When you check "MIDI2" box, it sends UMP "Stream Configuration Request" message 
 
 (The latest MIDI 2.0 specification probably expects that the MIDI 2.0 output port ("input port" in Android MIDI API wording) should be distinct from that of MIDI 1.0 output port, but there is no such Android MIDI API that makes it work as such yet. So, everything is basically based on a hackable assumption on Android platform up to Android 14.)
 
-Also note that since we do NOT really pair the output device with its expected input devices for bidirectional messaging, the expected reply (Stream Configuration Notification message) that would be sent by the recipient. If the recipient fails if no input port exists, then the device is not feasible for us (I should probably state, we are not feasible for them).
+Also note that since we do NOT really pair the output device with its expected input devices for bidirectional messaging, the expected reply (Stream Configuration Notification message) that would be sent by the recipient is *ignored*. If the recipient fails if no input port exists, then the device is not feasible for us (I should probably state, *we are* not feasible for them).
 
 
 ### Hacking ResidentMIDIKeyboard
