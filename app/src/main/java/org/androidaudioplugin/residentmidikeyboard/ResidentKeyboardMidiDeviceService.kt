@@ -21,5 +21,19 @@ class ResidentKeyboardMidiDeviceService : MidiDeviceService() {
         super.onClose()
     }
 
-    override fun onGetInputPortReceivers() = arrayOf<MidiReceiver>() // no "input" port
+    private val replyHandler = ResidentKeyboardMidiReceiver()
+    private val inputPortReceivers = arrayOf<MidiReceiver>(replyHandler)
+    override fun onGetInputPortReceivers() = inputPortReceivers
+
+    // So, this input channel exists because MIDI 2.0 clients that conform to
+    // the June 2023 Updates specification would send UMP Stream Configuration Notification
+    // back to this "device". Here we behave as if we followed the specification and processed
+    // them, while we actually totally ignore them :/
+    class ResidentKeyboardMidiReceiver : MidiReceiver() {
+        override fun onSend(p0: ByteArray?, p1: Int, p2: Int, p3: Long) {
+            // A valid MIDI 2.0 devices that conform to June 2023 Updates would reply to
+            // out UMP Stream Configuration Request (replying Stream Configuration Notification).
+            // We are brutal, simply discard them all (so far).
+        }
+    }
 }

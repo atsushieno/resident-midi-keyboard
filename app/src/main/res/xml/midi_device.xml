@@ -1,6 +1,7 @@
 <devices>
   <device name="ResidentMIDIKeyboard" manufacturer="atsushieno" product="ResidentMidiKeyboard">
-    <output-port name="RMK virtual output" />
+    <output-port name="RMK output" />
+    <input-port name="RMK input" /><!-- Not really doing any work, but exists as a paired "MIDI 2.0 reply-to-this" port -->
   </device>
 </devices>
 
