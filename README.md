@@ -5,6 +5,8 @@
 
 ResidentMIDIKeyboard for Android is a virtual MIDI keyboard application for Android. It supports MIDI 1.0 and 2.0 (June 2023 Updates, in "almost" standard compliant way).
 
+It works both as (1) a MIDI client keyboard that can connect to MIDI output devices, as well as (2) a virtual MIDI keyboard that DAWs can connect to it to receive MIDI input events.
+
 It supports "Expression Mode": instead of switching keys on the dragged loations, we can send pitchbend messages for horizontal dragging, per-note pitchbend messags for vertical dragging, and polyphonic (key) pressures for pressure changes on the device.
 
 (Note: per-note pitchbend works only on MIDI2 mode, and even on MIDI2 mode there is not really a MIDI device that supports per-note pitchbend, as far as @atsushieno knows as of July 2023.)
@@ -20,6 +22,7 @@ There are 3 ways to use the app (actually two for users; one for app developers)
 The app is primarily intended to meet all these conditions:
 
 - a MIDI client that works anywhere System Alert Window works
+- a virtual MIDI input keyboard that DAWs can connect to and receive MIDI inputs
 - supports both MIDI 1.0 and 2.0 (as long as possible)
 - makes use of mobile features such as multi-touches and follows mobile design principles
 
@@ -74,8 +77,12 @@ When you check "MIDI2" box, it sends UMP "Stream Configuration Request" message 
 
 Also note that since we do NOT really pair the output device with its expected input devices for bidirectional messaging, the expected reply (Stream Configuration Notification message) that would be sent by the recipient is *ignored*. If the recipient fails if no input port exists, then the device is not feasible for us (I should probably state, *we are* not feasible for them).
 
+### Connect to ResidentMIDIKeyboard as a "bidirectional" MIDI 2.0 device
 
-### Hacking ResidentMIDIKeyboard
+ResidentMIDIKeyboard offers a "nominal" MIDI output port (or input port in Android MIDI API wording) so that a valid MIDI 2.0 client that conforms to June 2023 Updates specification can send its UMP Stream Configuration Notification message to the port in reply to our Stream Configuration Request message (note that ResidentMIDIKeyboard sends it without expecting replies, as described above, regardless of the connection state, at least for now).
+
+
+## Hacking ResidentMIDIKeyboard
 
 We submodule [compose-audio-controls](https://github.com/atsushieno/compose-audio-controls/) for convenience, as we most likely depend on unpublished features that are only on `main` branch without release tags. Our project (as in `settings.gradle.kts`) references those modules in the git submodule directly, instead of depending on `mavenLocal()`.
 
