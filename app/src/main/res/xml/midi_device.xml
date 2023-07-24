@@ -1,0 +1,6 @@
+<devices>
+  <device name="ResidentMIDIKeyboard" manufacturer="atsushieno" product="ResidentMidiKeyboard">
+    <output-port name="RMK virtual output" />
+  </device>
+</devices>
+

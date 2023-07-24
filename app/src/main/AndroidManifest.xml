@@ -27,6 +27,14 @@
         </activity>
         <service android:name="org.androidaudioplugin.residentmidikeyboard.MidiKeyboardService" android:exported="false" />
         <service android:name="org.androidaudioplugin.residentmidikeyboard.MidiKeyboardViewService" android:exported="true" />
+        <service android:name="org.androidaudioplugin.residentmidikeyboard.ResidentKeyboardMidiDeviceService" android:exported="true"
+            android:permission="android.permission.BIND_MIDI_DEVICE_SERVICE">
+            <intent-filter>
+                <action android:name="android.media.midi.MidiDeviceService" />
+            </intent-filter>
+            <meta-data android:name="android.media.midi.MidiDeviceService"
+                android:resource="@xml/midi_device" />
+        </service>
     </application>
 
 </manifest>
