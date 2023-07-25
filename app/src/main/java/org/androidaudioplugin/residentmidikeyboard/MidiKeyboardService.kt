@@ -238,14 +238,18 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
         val manager = NotificationManagerCompat.from(this)
         manager.createNotificationChannel(channel)
 
+        val svc = this
         val builder = NotificationCompat.Builder(this, notificationChannelId).apply {
             setContentTitle("ResidentMIDIKeyboard")
             setContentText("Resident MIDI keyboard")
             setSmallIcon(R.mipmap.ic_launcher)
             setCategory(NotificationCompat.CATEGORY_SERVICE)
             setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            setContentIntent(PendingIntent.getActivity(
+                svc, 3, Intent(svc, MainActivity::class.java),
+                PendingIntent.FLAG_IMMUTABLE
+            ))
 
-            val svc = this@MidiKeyboardService
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val showAction = Intent(svc, MidiKeyboardService::class.java)
                     .putExtra(INTENT_COMMAND_KEY, ACTION_ALERT_WINDOW_SHOW)
@@ -261,15 +265,6 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                     NotificationCompat.Action.Builder(
                         null, "Hide",
                         PendingIntent.getForegroundService(svc, 2, hideAction, PendingIntent.FLAG_IMMUTABLE)
-                    ).build()
-                )
-                addAction(
-                    NotificationCompat.Action.Builder(
-                        null, "Switch to App",
-                        PendingIntent.getActivity(
-                            svc, 0, Intent(svc, MainActivity::class.java),
-                            PendingIntent.FLAG_IMMUTABLE
-                        )
                     ).build()
                 )
                 val stopAction = Intent(svc, MidiKeyboardService::class.java)

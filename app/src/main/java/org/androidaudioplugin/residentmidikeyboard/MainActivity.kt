@@ -116,10 +116,13 @@ fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
     Column(modifier.verticalScroll(rememberScrollState())) {
         MarkdownText(color = LocalContentColor.current,
             markdown = """
-There are three ways to use this MIDI keyboard:
-- run main activity (this screen)
-- via System Alert Window: you have to give UI overlay permission)
-- via SurfaceControlViewHost: apps need to connect to it)
+Resident MIDI Keyboard (RMK) is primarily designed to run as an overlay window.
+Start over the notification dot (you will have to give some permissions first).
+
+This main activity demonstrates the keyboard part too (but makes less sense to use it!)
+
+You can connect to a MIDI output, or have your DAW connect to this keyboard, if it supports Android MIDI API.
+Note that some DAWs do not actually support this API whereas it is the standard way (their issues, not ours).
 """,
             modifier = Modifier.padding (20.dp))
 
@@ -159,7 +162,7 @@ There are three ways to use this MIDI keyboard:
 
         MarkdownText(color = LocalContentColor.current,
             markdown = """
-Below is an example use case for SurfaceView and SurfaceControlViewHost.
+Below is an example use case for developers to demonstrate RMK SurfaceView and SurfaceControlViewHost.
 Note that you will have to ensure that you allocate necessary space for expanded DropDownMenu e.g. by making container scrollable.
 """,
             modifier = Modifier.padding (20.dp))
