@@ -37,9 +37,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +57,6 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dev.atsushieno.ktmidi.AndroidMidiAccess
 import org.androidaudioplugin.composeaudiocontrols.midi.KtMidiDeviceAccessScope
 import org.androidaudioplugin.composeaudiocontrols.midi.MidiKeyboardMain
-import org.androidaudioplugin.resident_midi_keyboard.R
 import org.androidaudioplugin.residentmidikeyboard.ui.theme.Typography
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
@@ -150,7 +151,9 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                                 TitleBar("ResidentMIDIKeyboard")
                             }
                         }
-                        midiScope.MidiKeyboardMain()
+                        val knobImage = ImageBitmap.imageResource(R.drawable.chromed_knob)
+
+                        midiScope.MidiKeyboardMain(knobImage)
                     }
                 }
             }
@@ -163,7 +166,8 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
         setContent {
             MidiKeyboardRemoteViewTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    midiScope.MidiKeyboardMain()
+                    val knobImage = ImageBitmap.imageResource(R.drawable.chromed_knob)
+                    midiScope.MidiKeyboardMain(knobImage)
                 }
             }
         }

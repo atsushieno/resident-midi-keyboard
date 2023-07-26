@@ -26,14 +26,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -105,6 +109,12 @@ fun MidiKeyboardManagerMainPreview() {
     }
 }
 
+@Composable
+private fun Markdown(markdown: String) {
+    MarkdownText(markdown = markdown, color = LocalContentColor.current, fontSize = 16.sp,
+        modifier = Modifier.padding (20.dp, 10.dp))
+}
+
 @OptIn(DelicateCoroutinesApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
@@ -114,17 +124,10 @@ fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
     }
 
     Column(modifier.verticalScroll(rememberScrollState())) {
-        MarkdownText(color = LocalContentColor.current,
-            markdown = """
+        Markdown("""
 Resident MIDI Keyboard (RMK) is primarily designed to run as an overlay window.
 Start over the notification dot (you will have to give some permissions first).
-
-This main activity demonstrates the keyboard part too (but makes less sense to use it!)
-
-You can connect to a MIDI output, or have your DAW connect to this keyboard, if it supports Android MIDI API.
-Note that some DAWs do not actually support this API whereas it is the standard way (their issues, not ours).
-""",
-            modifier = Modifier.padding (20.dp))
+""")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isNotificationPermissionRequired(context)) {
             val permissionState = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
@@ -157,15 +160,29 @@ Note that some DAWs do not actually support this API whereas it is the standard 
             }
         }
 
+        Markdown("""
+----
 
-        MidiKeyboardMain(AndroidMidiAccess(context))
+This main activity demonstrates the keyboard part too (but makes less sense to use it!)
 
-        MarkdownText(color = LocalContentColor.current,
-            markdown = """
+You can connect to a MIDI output, or have your DAW connect to this keyboard, if it supports Android MIDI API.
+Note that some DAWs do not actually support this API whereas it is the standard way (their issues, not ours).
+""")
+
+        val knobImage = ImageBitmap.imageResource(R.drawable.chromed_knob)
+
+        MidiKeyboardMain(AndroidMidiAccess(context), knobImage)
+
+        Markdown("""
+The knob controllers are for various non-note MIDI messages such as CCs, NRPNs, Per-Note Assignable and Registered Controllers.
+Drag a knob vertically to change the value. They are typically ranged between 0 and 127.
+It supports "fine" mode: hold 1 second on the knob to switch to it. Releasing the knob makes it back to normal mode.
+
+----
+
 Below is an example use case for developers to demonstrate RMK SurfaceView and SurfaceControlViewHost.
 Note that you will have to ensure that you allocate necessary space for expanded DropDownMenu e.g. by making container scrollable.
-""",
-            modifier = Modifier.padding (20.dp))
+""")
         val surfaceControlClient by remember { mutableStateOf(MidiKeyboardSurfaceControlClient(context)) }
             AndroidView(factory = {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -177,6 +194,6 @@ Note that you will have to ensure that you allocate necessary space for expanded
                     }
                 }
                 surfaceControlClient.surfaceView
-            }, Modifier.size(800.dp, 600.dp))
+            }, Modifier.size(800.dp, 700.dp))
     }
 }

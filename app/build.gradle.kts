@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "org.androidaudioplugin.resident_midi_keyboard"
+    namespace = "org.androidaudioplugin.residentmidikeyboard"
     compileSdk = 33
 
     defaultConfig {
