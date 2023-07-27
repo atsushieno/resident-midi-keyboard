@@ -195,5 +195,10 @@ Note that you will have to ensure that you allocate necessary space for expanded
                 }
                 surfaceControlClient.surfaceView
             }, Modifier.size(800.dp, 700.dp))
+
+        Markdown("""
+That's all! If you found any bugs please report at: https://github.com/atsushieno/resident-midi-keyboard/issues
+and if you have any questions feel free to post at: https://github.com/atsushieno/resident-midi-keyboard/discussions
+""")
     }
 }
