@@ -126,7 +126,7 @@ fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
     Column(modifier.verticalScroll(rememberScrollState())) {
         Markdown("""
 Resident MIDI Keyboard (RMK) is primarily designed to run as an overlay window.
-Start over the notification dot (you will have to give some permissions first).
+Start over the notification dot (you will have to give the Notification permission first).
 """)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isNotificationPermissionRequired(context)) {
