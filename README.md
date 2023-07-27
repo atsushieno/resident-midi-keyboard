@@ -1,7 +1,7 @@
 # ResidentMIDIKeyboard for Android
 
-![Resident MIDI Keyboard (System Alert Window)](docs/images/resident-midi-keyboard-system-alert-window.png)
-![Resident MIDI Keyboard (SurfaceView)](docs/images/resident-midi-keyboard-surface-view.png)
+![Resident MIDI Keyboard (System Alert Window)](docs/images/store/sshot1.png)
+![Resident MIDI Keyboard (MainActivity, with SurfaceControlViewHost)](docs/images/store/sshot2.png)
 
 ResidentMIDIKeyboard for Android is a virtual MIDI keyboard application for Android. It supports MIDI 1.0 and 2.0 (June 2023 Updates, in "almost" standard compliant way).
 
