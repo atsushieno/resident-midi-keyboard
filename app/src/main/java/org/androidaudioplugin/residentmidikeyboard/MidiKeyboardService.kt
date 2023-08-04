@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
-import android.os.MessageQueue.IdleHandler
 import android.provider.Settings
 import android.view.View
 import android.view.WindowManager
@@ -209,12 +208,9 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
             ACTION_ALERT_WINDOW_SHOW -> {
                 if (!Settings.canDrawOverlays(this)) {
                     Toast.makeText(this, "Overlay permission is not enabled.", Toast.LENGTH_LONG).show()
-                } else {
-                    view.context.mainLooper.queue.addIdleHandler {
-                        windowManager.addView(view, wmLayoutParams)
-                        false
-                    }
                 }
+                else
+                    windowManager.addView(view, wmLayoutParams)
             }
 
             ACTION_ALERT_WINDOW_HIDE -> {
