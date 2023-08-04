@@ -260,7 +260,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 addAction(
                     NotificationCompat.Action.Builder(
                         null, "Show",
-                        PendingIntent.getForegroundService(svc, 1, showAction, PendingIntent.FLAG_IMMUTABLE)
+                        PendingIntent.getService(svc, 1, showAction, PendingIntent.FLAG_IMMUTABLE)
                     ).build()
                 )
                 val hideAction = Intent(svc, MidiKeyboardService::class.java)
@@ -268,7 +268,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 addAction(
                     NotificationCompat.Action.Builder(
                         null, "Hide",
-                        PendingIntent.getForegroundService(svc, 2, hideAction, PendingIntent.FLAG_IMMUTABLE)
+                        PendingIntent.getService(svc, 2, hideAction, PendingIntent.FLAG_IMMUTABLE)
                     ).build()
                 )
                 val stopAction = Intent(svc, MidiKeyboardService::class.java)
@@ -276,7 +276,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 addAction(
                     NotificationCompat.Action.Builder(
                         null, "Stop",
-                        PendingIntent.getForegroundService(svc, 3, stopAction, PendingIntent.FLAG_IMMUTABLE)
+                        PendingIntent.getService(svc, 3, stopAction, PendingIntent.FLAG_IMMUTABLE)
                     ).build()
                 )
             }
