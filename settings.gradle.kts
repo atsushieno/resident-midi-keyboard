@@ -1,17 +1,19 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         google()
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
-        maven(uri("https://jitpack.io"))
-        mavenLocal()
+        maven(uri("https://jitpack.io")) // required for compose-markdown...
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
 
