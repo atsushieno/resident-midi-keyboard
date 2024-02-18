@@ -1,6 +1,7 @@
 package org.androidaudioplugin.residentmidikeyboard
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -125,7 +126,7 @@ fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
     Column(modifier.verticalScroll(rememberScrollState())) {
         Markdown("""
 Resident MIDI Keyboard (RMK) is primarily designed to run as an overlay window.
-Start over the notification dot (you will have to give the Notification permission first).
+Start over the notification dot (you will have to give us the Notification permission first).
 """)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && isNotificationPermissionRequired(context)) {
@@ -176,6 +177,10 @@ Note that some DAWs do not actually support this API whereas it is the standard 
 The knob controllers are for various non-note MIDI messages such as CCs, NRPNs, Per-Note Assignable and Registered Controllers.
 Drag a knob vertically to change the value. They are typically ranged between 0 and 127.
 It supports "fine" mode: hold 1 second on the knob to switch to it. Releasing the knob makes it back to normal mode.
+
+The "discrete" button indicates whether the value change events should be sent *every time*.
+For example, sending Program Change for *every value tick* does not make sense, so you want to uncheck it.
+(The switch is not automatic because we do not know which CC by index or RPN/NRPN by index MSB/LSB is discrete.)
 
 ----
 
