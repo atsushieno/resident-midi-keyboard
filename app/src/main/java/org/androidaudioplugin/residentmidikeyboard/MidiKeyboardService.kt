@@ -54,6 +54,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import dev.atsushieno.ktmidi.AndroidMidi2Access
 import dev.atsushieno.ktmidi.AndroidMidiAccess
 import org.androidaudioplugin.composeaudiocontrols.midi.KtMidiDeviceAccessScope
 import org.androidaudioplugin.composeaudiocontrols.midi.MidiKeyboardMain
@@ -121,7 +122,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
     }
 
     private val midiScope by lazy {
-        KtMidiDeviceAccessScope(AndroidMidiAccess(this))
+        KtMidiDeviceAccessScope(AndroidMidi2Access(this, includeMidi1Transport = true))
     }
     private val view: View by lazy {
         createOverlayComposeView()

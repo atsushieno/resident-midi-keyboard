@@ -1,0 +1,6 @@
+<devices>
+  <device name="ResidentMIDIKeyboard" manufacturer="atsushieno" product="ResidentMidiKeyboard">
+    <port name="RMK-UMP" />
+  </device>
+</devices>
+

@@ -6,11 +6,13 @@ plugins {
 
 android {
     namespace = "org.androidaudioplugin.residentmidikeyboard"
+    compileSdk = 34
     compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         applicationId = "org.androidaudioplugin.resident_midi_keyboard"
         minSdk = 23
+        targetSdk = 34
         targetSdkPreview = "VanillaIceCream"
         versionCode = 1
         versionName = "1.0"
