@@ -42,7 +42,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import dev.atsushieno.ktmidi.AndroidMidiAccess
+import dev.atsushieno.ktmidi.AndroidMidi2Access
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -171,7 +171,7 @@ Note that some DAWs do not actually support this API whereas it is the standard 
 
         val knobImage = ImageBitmap.imageResource(R.drawable.chromed_knob)
 
-        MidiKeyboardMain(AndroidMidiAccess(context), knobImage)
+        MidiKeyboardMain(AndroidMidi2Access(context, true), knobImage)
 
         Markdown("""
 The knob controllers are for various non-note MIDI messages such as CCs, NRPNs, Per-Note Assignable and Registered Controllers.
