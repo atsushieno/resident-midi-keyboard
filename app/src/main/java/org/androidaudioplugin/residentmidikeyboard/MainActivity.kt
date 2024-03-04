@@ -1,7 +1,6 @@
 package org.androidaudioplugin.residentmidikeyboard
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -125,7 +124,7 @@ fun MidiKeyboardManagerMain(modifier: Modifier = Modifier) {
 
     Column(modifier.verticalScroll(rememberScrollState())) {
         Markdown("""
-Resident MIDI Keyboard (RMK) is primarily designed to run as an overlay window.
+Resident MIDI Keyboard (RMK) is a MIDI 1.0/2.0 keyboard, primarily designed to run as an overlay window.
 Start over the notification dot (you will have to give us the Notification permission first).
 """)
 
@@ -167,6 +166,9 @@ This main activity demonstrates the keyboard part too (but makes less sense to u
 
 You can connect to a MIDI output, or have your DAW connect to this keyboard, if it supports Android MIDI API.
 Note that some DAWs do not actually support this API whereas it is the standard way (their issues, not ours).
+
+If you are using Android 13 or later versions, RMK supports MIDI 2.0 UMP devices.
+And if you are using Android 15 or later versions, RMK also provides virtual UMP port to connect from other apps.
 """)
 
         val knobImage = ImageBitmap.imageResource(R.drawable.chromed_knob)
