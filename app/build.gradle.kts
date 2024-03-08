@@ -6,6 +6,7 @@ plugins {
 
 android {
     namespace = "org.androidaudioplugin.residentmidikeyboard"
+    //compileSdkPreview = "VanillaIceCream"
     compileSdk = 34
 
     defaultConfig {
@@ -26,10 +27,11 @@ android {
         create("stable") {
             dimension = "api"
         }
+        /*
         create("previewAPI") {
             dimension = "api"
-            compileSdkPreview = "VanillaIceCream"
-        }
+            targetSdkPreview = "VanillaIceCream"
+        }*/
     }
 
     buildTypes {
