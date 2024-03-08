@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "org.androidaudioplugin.residentmidikeyboard"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "org.androidaudioplugin.resident_midi_keyboard"
@@ -21,6 +21,17 @@ android {
         }
     }
 
+    flavorDimensions += "api"
+    productFlavors {
+        create("stable") {
+            dimension = "api"
+        }
+        create("previewAPI") {
+            dimension = "api"
+            compileSdkPreview = "VanillaIceCream"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -30,6 +41,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
