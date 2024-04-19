@@ -6,8 +6,7 @@ plugins {
 
 android {
     namespace = "org.androidaudioplugin.residentmidikeyboard"
-    //compileSdkPreview = "VanillaIceCream"
-    compileSdk = 34
+    compileSdkPreview = "VanillaIceCream"
 
     defaultConfig {
         applicationId = "org.androidaudioplugin.resident_midi_keyboard"
@@ -27,11 +26,10 @@ android {
         create("stable") {
             dimension = "api"
         }
-        /*
         create("previewAPI") {
             dimension = "api"
             targetSdkPreview = "VanillaIceCream"
-        }*/
+        }
     }
 
     buildTypes {
@@ -55,8 +53,7 @@ android {
         compose = true
     }
     composeOptions {
-        // FIXME: lame direct versioning (but the stable JetBrains versions never work fine)
-        kotlinCompilerExtensionVersion = "1.5.8"
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {
@@ -78,8 +75,11 @@ dependencies {
     implementation(libs.ktmidi)
     implementation(libs.accompanist.permissions)
 
-    implementation(project(":compose-audio-controls"))
-    implementation(project(":compose-audio-controls-midi"))
+    // We would occasionally switch between the released package and the submodules.
+    //implementation(project(":compose-audio-controls"))
+    //implementation(project(":compose-audio-controls-midi"))
+    implementation(libs.compose.audio.controls)
+    implementation(libs.compose.audio.controls.midi)
     implementation(libs.compose.markdown)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.service)

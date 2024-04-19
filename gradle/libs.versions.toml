@@ -1,23 +1,25 @@
 [versions]
-agp = "8.4.0-alpha13"
+agp = "8.3.2"
 compose-markdown = "0.3.4"
-kotlin = "1.9.22"
-core-ktx = "1.12.0"
+kotlin = "1.9.23"
+core-ktx = "1.13.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-kotlinx-coroutines-core = "1.8.0-RC2"
+kotlinx-coroutines-core = "1.8.0"
 lifecycle-runtime-ktx = "2.7.0"
-activity-compose = "1.8.2"
-compose-bom = "2024.02.01"
+activity-compose = "1.9.0"
+compose-bom = "2024.04.01"
+compose-compiler = "1.5.12"
 metalava-gradle = "0.3.5"
 dokka = "1.9.10"
-ktmidi = "0.8.0-pre4"
-compose-audio-controls = "0.4.3" # ourselves
+ktmidi = "0.8.2"
+compose-audio-controls = "0.5.1" # ourselves
 appcompat = "1.6.1"
 lifecycle-service = "2.7.0"
-compose-plugin = "1.6.0"
+compose-plugin = "1.6.2"
 accompanist-permissions = "0.32.0"
+kotlinx-datetime = "0.5.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
@@ -41,6 +43,9 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 ktmidi = { group = "dev.atsushieno", name = "ktmidi", version.ref = "ktmidi" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle-service" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+compose-audio-controls = { module = "org.androidaudioplugin:compose-audio-controls", version.ref = "compose-audio-controls" }
+compose-audio-controls-midi = { module = "org.androidaudioplugin:compose-audio-controls-midi", version.ref = "compose-audio-controls" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

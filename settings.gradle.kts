@@ -20,8 +20,10 @@ dependencyResolutionManagement {
 rootProject.name = "resident-midi-keyboard"
 val CAC_DIR = "external/compose-audio-controls"
 include(":app")
+// We would occasionally switch between the released package and the submodules.
+/*
 include(":compose-audio-controls")
 include(":compose-audio-controls-midi")
 project(":compose-audio-controls").projectDir = File("$CAC_DIR/compose-audio-controls")
 project(":compose-audio-controls-midi").projectDir = File("$CAC_DIR/compose-audio-controls-midi")
-
+*/

@@ -38,7 +38,6 @@
             <meta-data android:name="android.media.midi.MidiDeviceService"
                 android:resource="@xml/midi_device" />
         </service>
-        <!--
         <service android:name=".ResidentKeyboardMidiUmpDeviceService" android:exported="true"
             android:permission="android.permission.BIND_MIDI_DEVICE_SERVICE">
             <intent-filter>
@@ -47,7 +46,6 @@
             <property android:name="android.media.midi.MidiUmpDeviceService"
                 android:resource="@xml/ump_midi_device" />
         </service>
-        -->
     </application>
 
 </manifest>
