@@ -2,33 +2,23 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "org.androidaudioplugin.residentmidikeyboard"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "org.androidaudioplugin.resident_midi_keyboard"
-        minSdk = 23
-        targetSdk = 34
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-    }
-
-    flavorDimensions += "api"
-    productFlavors {
-        create("stable") {
-            dimension = "api"
-        }
-        create("previewAPI") {
-            dimension = "api"
-            targetSdkPreview = "VanillaIceCream"
         }
     }
 
@@ -51,9 +41,6 @@ android {
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     packaging {
         resources {
