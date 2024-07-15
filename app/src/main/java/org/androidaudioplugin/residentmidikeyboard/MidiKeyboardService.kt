@@ -142,7 +142,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                                 Modifier.fillMaxWidth()
                                     //.background(MaterialTheme.colorScheme.inverseSurface)
                             ) {
-                                IconButton(onClick = { windowManager.removeView(view) }) {
+                                IconButton(onClick = { view.visibility = View.GONE }) {
                                     Icon(
                                         imageVector = Icons.Default.Close,
                                         contentDescription = "close button",
@@ -210,16 +210,18 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 if (!Settings.canDrawOverlays(this)) {
                     Toast.makeText(this, "Overlay permission is not enabled.", Toast.LENGTH_LONG).show()
                 }
+                else if (view.parent != null)
+                    view.visibility = View.VISIBLE
                 else
                     windowManager.addView(view, wmLayoutParams)
             }
 
             ACTION_ALERT_WINDOW_HIDE -> {
-                midiScope.cleanup()
-                windowManager.removeView(view)
+                view.visibility = View.GONE
             }
 
             ACTION_STOP -> {
+                midiScope.cleanup()
                 stopSelf()
                 exitProcess(0)
             }
