@@ -1,4 +1,4 @@
-package org.androidaudioplugin.residentmidikeyboard
+package org.androidaudioplugin.resident_midi_keyboard
 
 import android.app.PendingIntent
 import android.content.Context
@@ -55,10 +55,9 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dev.atsushieno.ktmidi.AndroidMidi2Access
-import dev.atsushieno.ktmidi.AndroidMidiAccess
 import org.androidaudioplugin.composeaudiocontrols.midi.KtMidiDeviceAccessScope
 import org.androidaudioplugin.composeaudiocontrols.midi.MidiKeyboardMain
-import org.androidaudioplugin.residentmidikeyboard.ui.theme.Typography
+import org.androidaudioplugin.resident_midi_keyboard.ui.theme.Typography
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
 

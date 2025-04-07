@@ -1,4 +1,3 @@
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
@@ -6,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "org.androidaudioplugin.residentmidikeyboard"
+    namespace = "org.androidaudioplugin.resident_midi_keyboard"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {

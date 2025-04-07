@@ -1,4 +1,4 @@
-package org.androidaudioplugin.residentmidikeyboard
+package org.androidaudioplugin.resident_midi_keyboard
 
 import android.Manifest
 import android.content.Context
@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -36,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -47,7 +45,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.androidaudioplugin.composeaudiocontrols.midi.MidiKeyboardMain
-import org.androidaudioplugin.residentmidikeyboard.ui.theme.ComposeAudioControlsTheme
+import org.androidaudioplugin.resident_midi_keyboard.ui.theme.ComposeAudioControlsTheme
 import kotlin.system.exitProcess
 
 
@@ -110,8 +108,7 @@ fun MidiKeyboardManagerMainPreview() {
 
 @Composable
 private fun Markdown(markdown: String) {
-    MarkdownText(markdown = markdown, color = LocalContentColor.current, fontSize = 16.sp,
-        modifier = Modifier.padding (20.dp, 10.dp))
+    MarkdownText(markdown = markdown, modifier = Modifier.padding (20.dp, 10.dp))
 }
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalPermissionsApi::class)

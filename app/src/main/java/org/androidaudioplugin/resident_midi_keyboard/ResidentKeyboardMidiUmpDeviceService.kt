@@ -1,4 +1,4 @@
-package org.androidaudioplugin.residentmidikeyboard
+package org.androidaudioplugin.resident_midi_keyboard
 
 import android.media.midi.MidiReceiver
 import android.media.midi.MidiUmpDeviceService
