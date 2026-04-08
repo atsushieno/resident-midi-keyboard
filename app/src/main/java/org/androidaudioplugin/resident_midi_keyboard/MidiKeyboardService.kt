@@ -7,17 +7,16 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -102,8 +101,11 @@ fun MidiKeyboardRemoteViewTheme(
 }
 
 open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
+    private val currentNumOctaves = mutableIntStateOf(2)
+
     @Composable
     fun OverlayDraggableContainer(
+        rootView: View,
         modifier: Modifier = Modifier,
         content: @Composable BoxScope.() -> Unit
     ) {
@@ -116,7 +118,8 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                     x = overlayOffset.x.roundToInt()
                     y = overlayOffset.y.roundToInt()
                 }
-                windowManager.updateViewLayout(view, wmLayoutParams)
+                if (rootView.isAttachedToWindow)
+                    windowManager.updateViewLayout(rootView, wmLayoutParams)
             }
         }, content = content)
     }
@@ -137,19 +140,16 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
 
 
     fun createOverlayComposeView() = ComposeView(this).apply {
+        val rootView = this
         setViewTreeLifecycleOwner(this@MidiKeyboardService)
         setViewTreeSavedStateRegistryOwner(this@MidiKeyboardService)
 
         setContent {
             MidiKeyboardRemoteViewTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    val currentNumOctaves = remember { mutableIntStateOf(2) }
                     Column {
-                        OverlayDraggableContainer {
-                            Row(
-                                Modifier.fillMaxWidth()
-                                    //.background(MaterialTheme.colorScheme.inverseSurface)
-                            ) {
+                        OverlayDraggableContainer(rootView) {
+                            Row {
                                 /*
                                 IconButton(onClick = { view.visibility = View.GONE }) {
                                     Icon(
@@ -164,7 +164,7 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                                 }
                                 TitleBar("ResidentMIDIKeyboard")
                                 NumOctavesSelector(currentOctave = currentNumOctaves.intValue, onValueChange = { newOctaves ->
-                                    currentNumOctaves.intValue = newOctaves
+                                    updateNumOctaves(newOctaves)
                                 })
                             }
                         }
@@ -181,6 +181,21 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                 }
             }
         }
+    }
+
+    private val resizeRunnable = Runnable {
+        if (view.isAttachedToWindow) {
+            view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            wmLayoutParams.width = view.measuredWidth
+            wmLayoutParams.height = view.measuredHeight
+            windowManager.updateViewLayout(view, wmLayoutParams)
+        }
+    }
+
+    fun updateNumOctaves(octaves: Int) {
+        currentNumOctaves.intValue = octaves
+        view.removeCallbacks(resizeRunnable)
+        view.postDelayed(resizeRunnable, 100)
     }
 
     fun createSurfaceComposeView() = ComposeView(this).apply {
@@ -213,9 +228,11 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
-        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
         PixelFormat.TRANSLUCENT
-    )
+    ).apply {
+        gravity = Gravity.CENTER
+    }
     private val windowManager by lazy {
         getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
@@ -321,7 +338,7 @@ fun NumOctavesSelector(modifier: Modifier = Modifier, currentOctave: Int, onValu
         modifier = modifier,
         expanded = listExpanded,
         onDismissRequest = { listExpanded = false }) {
-        arrayOf(1, 2, 3, 4).forEachIndexed { index, i ->
+        arrayOf(1, 2, 3, 4).forEach { i ->
             DropdownMenuItem(text = { Text(i.toString(), color = LocalContentColor.current) }, onClick = {
                 onValueChange(i)
                 listExpanded = false
