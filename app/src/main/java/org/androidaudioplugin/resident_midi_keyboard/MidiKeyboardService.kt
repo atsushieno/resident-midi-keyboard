@@ -19,23 +19,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Modifier.Companion
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
@@ -55,8 +60,11 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import dev.atsushieno.ktmidi.AndroidMidi2Access
+import org.androidaudioplugin.composeaudiocontrols.midi.DiatonicLiveMidiKeyboard
 import org.androidaudioplugin.composeaudiocontrols.midi.KtMidiDeviceAccessScope
+import org.androidaudioplugin.composeaudiocontrols.midi.MidiDeviceConfigurator
 import org.androidaudioplugin.composeaudiocontrols.midi.MidiKeyboardMain
+import org.androidaudioplugin.composeaudiocontrols.midi.MidiKnobControllerCombo
 import org.androidaudioplugin.resident_midi_keyboard.ui.theme.Typography
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
@@ -135,12 +143,14 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
         setContent {
             MidiKeyboardRemoteViewTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
+                    val currentNumOctaves = remember { mutableIntStateOf(2) }
                     Column {
                         OverlayDraggableContainer {
                             Row(
                                 Modifier.fillMaxWidth()
                                     //.background(MaterialTheme.colorScheme.inverseSurface)
                             ) {
+                                /*
                                 IconButton(onClick = { view.visibility = View.GONE }) {
                                     Icon(
                                         imageVector = Icons.Default.Close,
@@ -148,12 +158,25 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
                                         modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                                     )
                                 }
+                                 */
+                                TextButton(onClick = { view.visibility = View.GONE }) {
+                                    Text("[X]")
+                                }
                                 TitleBar("ResidentMIDIKeyboard")
+                                NumOctavesSelector(currentOctave = currentNumOctaves.intValue, onValueChange = { newOctaves ->
+                                    currentNumOctaves.intValue = newOctaves
+                                })
                             }
                         }
                         val knobImage = ImageBitmap.imageResource(R.drawable.chromed_knob)
 
-                        midiScope.MidiKeyboardMain(knobImage)
+                        Column {
+                            midiScope.MidiDeviceConfigurator()
+                            midiScope.DiatonicLiveMidiKeyboard(numWhiteKeys = currentNumOctaves.intValue * 7)
+                            Row {
+                                midiScope.MidiKnobControllerCombo(knobImage)
+                            }
+                        }
                     }
                 }
             }
@@ -286,6 +309,24 @@ open class MidiKeyboardService : LifecycleService(), SavedStateRegistryOwner {
         val notification = builder.build()
 
         startForeground(1, notification)
+    }
+}
+
+@Composable
+fun NumOctavesSelector(modifier: Modifier = Modifier, currentOctave: Int, onValueChange: (Int) -> Unit = { _ -> }) {
+    var listExpanded by remember { mutableStateOf(false) }
+    Button(onClick = { listExpanded = true }) {
+        Text("$currentOctave ${if (currentOctave > 1) "octs." else "oct."}", color = LocalContentColor.current) }
+    DropdownMenu(
+        modifier = modifier,
+        expanded = listExpanded,
+        onDismissRequest = { listExpanded = false }) {
+        arrayOf(1, 2, 3, 4).forEachIndexed { index, i ->
+            DropdownMenuItem(text = { Text(i.toString(), color = LocalContentColor.current) }, onClick = {
+                onValueChange(i)
+                listExpanded = false
+            })
+        }
     }
 }
 
